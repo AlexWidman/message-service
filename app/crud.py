@@ -39,8 +39,10 @@ def get_unread_messages(db: Session, recipient: str):
 def delete_message(db: Session, message_id: int):
     # Find message based on id
     message = (
-        db.query(models.Message).filter(models.Message.id == message_id).first()
-    )
+        db.query(models.Message)
+        .filter(models.Message.id == message_id)
+        .first()
+        )
 
     if message is None:     # Returns None if message not found
         return None
@@ -54,8 +56,10 @@ def delete_message(db: Session, message_id: int):
 def delete_multiple_messages(db: Session, message_ids: list[int]):
     # Find messages through list of ids
     messages = (
-        db.query(models.Message).filter(models.Message.id.in_(message_ids)).all()
-    )
+        db.query(models.Message)
+        .filter(models.Message.id.in_(message_ids))
+        .all()
+        )
 
     if not messages:
         return []
@@ -63,5 +67,35 @@ def delete_multiple_messages(db: Session, message_ids: list[int]):
         db.delete(message)
 
     db.commit()
+
+    return messages
+
+
+def get_messages(db: Session, recipient: str, start: int = 0, stop: int | None = None):
+    # Finds all messages from recipient and orders them by date (oldest first)
+    query = (
+        db.query(models.Message)
+        .filter(models.Message.recipient == recipient)
+        .order_by(models.Message.timestamp)
+        )
+
+    if stop is not None:
+        messages = query.slice(start, stop).all()   # Messages to retrieve: Starts at index x, ends at index y
+    else:
+        messages = query.offset(start).all()        # If no stop index, start at index x and retrieve rest
+
+    return messages
+
+
+def get_all_messages(db: Session, start: int = 0, stop: int | None = None):
+    query = (
+        db.query(models.Message)
+        .order_by(models.Message.timestamp)
+        )
+    
+    if stop is not None:
+        messages = query.slice(start, stop).all()
+    else:
+        messages = query.offset(start).all()
 
     return messages

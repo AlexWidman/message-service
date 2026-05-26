@@ -54,3 +54,20 @@ def delete_multiple_messages(
     db: Session = Depends(get_db)
 ):
     return crud.delete_multiple_messages(db, message_ids)
+
+@app.get("/messages", response_model = list[schemas.MessageResponse])
+def get_all_messages(
+    start: int = 0,
+    stop: int | None = None,
+    db: Session = Depends(get_db)
+):
+    return crud.get_all_messages(db, start, stop)
+
+@app.get("/messages/{recipient}", response_model = list[schemas.MessageResponse])
+def get_messages(
+    recipient: str,
+    start: int = 0,
+    stop: int | None = None,
+    db: Session = Depends(get_db)
+):
+    return crud.get_messages(db, recipient, start, stop)
