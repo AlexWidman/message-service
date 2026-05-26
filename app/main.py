@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
+from typing import List
 
 from app.database import engine, Base, SessionLocal
 from app.models import Message
@@ -46,3 +47,10 @@ def delete_message(
         return {"error": "Message not found"}
     
     return message
+
+@app.delete("/messages", response_model = list[schemas.MessageResponse])
+def delete_multiple_messages(
+    message_ids: List[int],
+    db: Session = Depends(get_db)
+):
+    return crud.delete_multiple_messages(db, message_ids)

@@ -49,3 +49,19 @@ def delete_message(db: Session, message_id: int):
     db.commit()
 
     return message
+
+
+def delete_multiple_messages(db: Session, message_ids: list[int]):
+    # Find messages through list of ids
+    messages = (
+        db.query(models.Message).filter(models.Message.id.in_(message_ids)).all()
+    )
+
+    if not messages:
+        return []
+    for message in messages:
+        db.delete(message)
+
+    db.commit()
+
+    return messages
