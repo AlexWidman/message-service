@@ -34,3 +34,15 @@ def get_unread_messages(
     db: Session = Depends(get_db)
 ):
     return crud.get_unread_messages(db, recipient)
+
+@app.delete("/messages/{message_id}", response_model = schemas.MessageResponse)
+def delete_message(
+    message_id: int,
+    db: Session = Depends(get_db)
+):
+    message = crud.delete_message(db, message_id)
+
+    if message is None:
+        return {"error": "Message not found"}
+    
+    return message
