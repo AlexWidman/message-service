@@ -27,3 +27,10 @@ def create_message(
     db: Session = Depends(get_db)
 ):
     return crud.create_message(db, message)
+
+@app.get("/messages/unread/{recipient}", response_model = list[schemas.MessageResponse])
+def get_unread_messages(
+    recipient: str,
+    db: Session = Depends(get_db)
+):
+    return crud.get_unread_messages(db, recipient)

@@ -3,6 +3,7 @@ import datetime as dt
 
 from app.database import Base
 
+
 class Message(Base):
     __tablename__ = "messages"
 
