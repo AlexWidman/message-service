@@ -103,6 +103,70 @@ DELETE /messages/{message_id}
 DELETE /messages
 ```
 
+## How to use the API
+
+Here, PowerShell commands are provided for using the API, however, this can be applied to curl, etc.
+
+Base URL:
+
+```text
+http://127.0.0.1:8000
+```
+
+### Create Message
+
+```powershell
+Invoke-RestMethod `
+-Uri "http://127.0.0.1:8000/messages" `
+-Method POST `
+-ContentType "application/json" `
+-Body '{"sender":"bobina","recipient":"bob","content":"COME HOME NOW"}'
+```
+
+### Fetch Unread Messages
+
+```powershell
+Invoke-RestMethod `
+-Uri "http://127.0.0.1:8000/messages/unread/bob"
+```
+
+### Fetch All Messages
+
+```powershell
+Invoke-RestMethod `
+-Uri "http://127.0.0.1:8000/messages"
+```
+
+### Fetch Messages with index for start and stop
+
+```powershell
+Invoke-RestMethod `
+-Uri "http://127.0.0.1:8000/messages?start=0&stop=5"
+```
+
+### Fetch messages for a Recipient
+
+```powershell
+Invoke-RestMethod `
+-Uri "http://127.0.0.1:8000/messages/bob"
+```
+
+### Delete a Message
+
+```powershell
+Invoke-RestMethod `
+-Uri "http://127.0.0.1:8000/messages/1" `
+-Method DELETE
+```
+
+### Delete Multiple Messages
+
+```powershell
+Invoke-RestMethod `
+-Uri "http://127.0.0.1:8000/messages?message_ids=1&message_ids=2" `
+-Method DELETE
+```
+
 ## Assumptions
 
 - Messages are plain text only
